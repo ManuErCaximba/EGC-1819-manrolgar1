@@ -1,0 +1,19 @@
+language: python 
+python: 
+- "3.6"
+env: 
+- DJANGO=2.0 DB=postgres
+services:
+  - postgresql
+addons:
+  postgresql: "9.6"
+before_script:
+  - psql -U postgres -c "create user decide password 'decide'"
+  - psql -U postgres -c "create database decide owner decide"
+  - psql -U postgres -c "ALTER USER decide CREATEDB"
+  - cd decide
+  - python manage.py migrate
+install:
+  - pip install -r requirements.txt
+script:
+  - ./manage.py test store
