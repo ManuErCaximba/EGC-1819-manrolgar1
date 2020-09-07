@@ -1,22 +1,29 @@
-language: python 
-python: 
-- "3.6"
-env: 
+language: python
+python:
+- '3.6'
+env:
 - DJANGO=2.0 DB=postgres
 services:
-  - postgresql
+- postgresql
 addons:
-  postgresql: "9.6"
+  postgresql: '9.6'
 before_script:
-  - psql -U postgres -c "create user decide password 'decide'"
-  - psql -U postgres -c "create database decide owner decide"
-  - psql -U postgres -c "ALTER USER decide CREATEDB"
-  - cd decide
-  - python3 manage.py migrate
+- psql -U postgres -c "create user decide password 'decide'"
+- psql -U postgres -c "create database decide owner decide"
+- psql -U postgres -c "ALTER USER decide CREATEDB"
+- cd decide
+- python3 manage.py migrate
 install:
-  - pip install -r requirements.txt
+- pip install -r requirements.txt
 script:
-  - python3 manage.py test
+- cp travis_local_settings.py localsettings.py
+- python3 manage.py test --keepdb
 branches:
   only:
-    - master
+  - master
+deploy:
+  provider: heroku
+  app: 'decide-07092020'
+  strategy: git
+  api_key:
+    secure: URsAufJA2vCZUCSD/yNcHZMD+e82GZg3CtBywzBJK3M4dcAvmBLX3+BTV/0RwR/Svf2fCbvrOt23R1yU1h/z0vsZBo+6Rj90ZNJxH+KTIOuGUQKNOY+4aDlOr4lm4rnNnc68S8jwEZEcahD5527xho0iAq81AeSeduDjvNYag0XmuShMQcrH2rLMGX7GjpaeP8OgdDkoC3q5oyJUbI8KpSvVDIJq7SIt215DotP0BDAE4ucglRfWEyXrKjYQcqtAhim75SUhJaOZmvC0dhQzlyW83zpQldg2Lg8MDkCVEZj/GhhZzWV7bDEJsDfQAk2+kcYg/DEcgMWk7OqppAQKqKnx0Ygd4zE+lPzVonok192JvVc1HRinKRPSpKMdMMqrR9NwR9FnTpN7yLdCJVXuXAY7KcqgmTLOVhqLB4uH0HjnoDmYKSJ/zNqtwg59l9ZZLzpl65IlGm0hlv1/BEfi7ty0CV4sbZgSCRAcnkPKk/vXU14DtZhwDoO1jxY3lbRISBUsK+zIs0JIaXuX3/C6qCsYW8cbkFX2wrfoceHedlqxI+TWtqafVLF7Vmsx8pT1IWdCEwoY3zm/tu3UMultiTZwLMgmJw3e75wMDdgQHi0siy8ajbEE4zFFLlJ3pQTQA32n2bhSMvSIjeLZBuqB0B1ZmoMPByMuR6HTk1U9Qus=
