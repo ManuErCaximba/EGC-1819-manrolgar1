@@ -16,4 +16,8 @@ before_script:
 install:
   - pip install -r requirements.txt
 script:
+<<<<<<< HEAD
   - ./manage.py test
+=======
+  - ./manage.py test store
+>>>>>>> desarrollo
