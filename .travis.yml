@@ -1,23 +1,21 @@
-language: python
-python:
-- '3.6'
-env:
-- DJANGO=2.0 DB=postgres
+dist: xenial
 services:
 - postgresql
 addons:
-  postgresql: '9.6'
+  postgresql: '9.4'
 before_script:
 - psql -U postgres -c "create user decide password 'decide'"
 - psql -U postgres -c "create database decide owner decide"
 - psql -U postgres -c "ALTER USER decide CREATEDB"
-- cd decide
-- python3 manage.py migrate
+language: python
+python:
+- '3.6'
 install:
 - pip install -r requirements.txt
 script:
-- cp travis_local_settings.py localsettings.py
-- python3 manage.py test --keepdb
+- cd decide
+- cp travis_local_settings.py local_settings.py
+- python ./manage.py test --keepdb
 branches:
   only:
   - master
